@@ -13,6 +13,7 @@
 #define TILT_LAUNCH_PIN 16
 
 #define MOTION_PIN 27
+#define BUZZER_PIN 23
 
 // =====================================
 // SERVOS
@@ -24,8 +25,8 @@ Servo tiltCamServo;
 Servo panLaunchServo;
 Servo tiltLaunchServo;
 
-int panAngle = 90;
-int tiltAngle = 90;
+int panAngle = 0;
+int tiltAngle = 30;
 
 // =====================================
 // VL53L0X
@@ -48,6 +49,9 @@ void setup() {
   Wire.begin(21, 22);
 
   pinMode(MOTION_PIN, INPUT);
+
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, LOW);
 
   // ==========================
   // Camera Pan Tilt
@@ -135,6 +139,16 @@ void readSerialCommand() {
          tIndex + 3)
       .toInt();
 
+  // ==================================
+  // BÁO CÒI NẾU PYTHON GỬI NGOÀI 0-180
+  // ==================================
+
+  if (newPan < 0 || newPan > 180) {
+    digitalWrite(BUZZER_PIN, HIGH);
+  } else {
+    digitalWrite(BUZZER_PIN, LOW);
+  }
+
   // ==========================
   // Full Range
   // ==========================
@@ -153,6 +167,12 @@ void readSerialCommand() {
 
   panAngle = newPan;
   tiltAngle = newTilt;
+
+  Serial.print("PAN=");
+  Serial.print(panAngle);
+
+  Serial.print(" TILT=");
+  Serial.println(tiltAngle);
 
   // ==========================
   // CAMERA
@@ -179,8 +199,7 @@ void readSerialCommand() {
 
 void sendSensorData() {
   if (
-    millis() - lastSend
-    < SEND_INTERVAL)
+    millis() - lastSend < SEND_INTERVAL)
     return;
 
   lastSend = millis();

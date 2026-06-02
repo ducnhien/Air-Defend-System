@@ -7,7 +7,7 @@ names: ['Helicopter', 'Jet', 'Rocket']
 
 roboflow:
   workspace: test-zw34y
-  project: air-defense-system-o60us
+  project: dataset-ujtij
   version: 4
   license: CC BY 4.0
-  url: https://universe.roboflow.com/test-zw34y/air-defense-system-o60us/dataset/4
+  url: https://universe.roboflow.com/test-zw34y/dataset-ujtij/dataset/4
